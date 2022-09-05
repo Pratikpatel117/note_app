@@ -1,5 +1,9 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
+import 'package:note_app/utils/global_value.dart';
 import 'package:note_app/widget/add_note.dart';
+import 'package:note_app/widget/notes_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,48 +13,37 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<NotesData> notes = [
+    NotesData(notes: "First Day", subNotes: "one Day"),
+    NotesData(notes: "Second Day", subNotes: "two Day"),
+  ];
+
+  addNotes() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        children: [],
+        children: [
+          Expanded(
+            child: ListView.builder(
+                itemCount: GlobalValue().notesList.length,
+                itemBuilder: (context, index) {
+                  return NotesWidget(
+                      notes: GlobalValue().notesList[index].notes,
+                      subTitle: GlobalValue().notesList[index].subNotes);
+                }),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(onPressed: () {
         showModalBottomSheet(
           context: context,
           builder: (context) {
-            return Wrap(
-              children: [
-                ListTile(
-                  leading: Icon(Icons.share),
-                  title: Text('Share'),
-                ),
-                ListTile(
-                  leading: Icon(Icons.copy),
-                  title: Text('Copy Link'),
-                ),
-                ListTile(
-                  leading: Icon(Icons.edit),
-                  title: Text('Edit'),
-                ),
-              ],
-            );
+            return const NotesField();
           },
         );
       }),
     );
-  }
-
-  Future bottomSheet(BuildContext context) {
-    return showModalBottomSheet(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
-        backgroundColor: Colors.black,
-        context: context,
-        isScrollControlled: true,
-        builder: (context) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18),
-              child: NotesField(),
-            ));
   }
 }
